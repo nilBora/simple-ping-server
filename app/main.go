@@ -1,19 +1,19 @@
 package main
 import (
-  "fmt"
-  "io"
+  //"fmt"
+  //"io"
   "log"
    "net/http"
-  "crypto/tls"
+ // "crypto/tls"
    "github.com/pkg/errors"
-   "bytes"
-   "io/ioutil"
+   //"bytes"
+   //"io/ioutil"
    //"github.com/didip/tollbooth/v6"
    //"github.com/didip/tollbooth_chi"
    "github.com/go-chi/chi/v5"
    "github.com/go-chi/chi/v5/middleware"
    "github.com/jessevdk/go-flags"
-   //"strings"
+   "strings"
 )
 
 type Server struct {
@@ -21,13 +21,11 @@ type Server struct {
 	MaxPinAttempts int
 	WebRoot        string
 	Version        string
-	TargetHost     string
 	Host           string
 	Port           string
 }
 
 type Options struct {
-    TargetHost string `short:"t" long:"target" description:"Target host" required:"true"`
     Host string `short:"h" long:"host" default:"127.0.0.1" description:"Host web server"`
     Port string `short:"p" long:"port" default:"8081" description:"Port web server"`
 }
@@ -44,7 +42,6 @@ func main() {
         PinSize:   1,
         WebRoot:   "/",
         Version:   "1.0",
-        TargetHost: opts.TargetHost,
         Host: opts.Host,
         Port: opts.Port,
     }
@@ -72,16 +69,11 @@ func (s Server) routes() chi.Router {
     router.Use(middleware.Logger)
     router.Use(Ping)
 
-	router.Route("/", func(r chi.Router) {
-	    r.Get("/ping", Ping)
-	})
-
 	return router
 }
 
 func Ping(next http.Handler) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
-
 		if r.Method == "GET" && strings.HasSuffix(strings.ToLower(r.URL.Path), "/ping") {
 			w.Header().Set("Content-Type", "text/plain")
 			w.WriteHeader(http.StatusOK)
