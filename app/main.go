@@ -68,6 +68,8 @@ func (s Server) routes() chi.Router {
 
     router.Use(middleware.Logger)
     router.Use(Ping)
+    router.Route("/", func(r chi.Router) {
+    })
 
 	return router
 }
