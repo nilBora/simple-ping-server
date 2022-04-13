@@ -12,26 +12,22 @@ WORKDIR /build
 
 RUN apk add --no-cache --update git tzdata ca-certificates
 
-#RUN \
-    #if [ -z "$CI" ] ; then \
-    #echo "runs outside of CI" && version=$(git rev-parse --abbrev-ref HEAD)-$(git log -1 --format=%h)-$(date +%Y%m%dT%H:%M:%S); \
-    #else version=${GIT_BRANCH}-${GITHUB_SHA:0:7}-$(date +%Y%m%dT%H:%M:%S); fi && \
-    #echo "version=$version" && \
-    #cd app && go build -o /build/server -ldflags "-X main.revision=${version} -s -w"
-RUN cd app && go build -o /server
+RUN go mod vendor
 
+RUN \
+    if [ -z "$CI" ] ; then \
+    echo "runs outside of CI" && version=$(git rev-parse --abbrev-ref HEAD)-$(git log -1 --format=%h)-$(date +%Y%m%dT%H:%M:%S); \
+    else version=${GIT_BRANCH}-${GITHUB_SHA:0:7}-$(date +%Y%m%dT%H:%M:%S); fi && \
+    echo "version=$version"
 
-
-FROM ghcr.io/umputun/baseimage/app:v1.6.1 as base
+RUN cd app && go build -o /echo-http -ldflags "-X main.revision=${version} -s -w"
 
 FROM scratch
-ENV REPROXY_IN_DOCKER=1
 
-COPY --from=backend /build/reproxy /srv/reproxy
-COPY --from=base /usr/share/zoneinfo /usr/share/zoneinfo
-COPY --from=base /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
-COPY --from=base /etc/passwd /etc/passwd
-COPY --from=base /etc/group /etc/group
+COPY --from=backend /usr/share/zoneinfo /usr/share/zoneinfo
+COPY --from=backend /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+COPY --from=backend /echo-http /srv/echo-http
 
+EXPOSE 8080
 WORKDIR /srv
-ENTRYPOINT ["/srv/server"]
+ENTRYPOINT ["/srv/echo-http"]

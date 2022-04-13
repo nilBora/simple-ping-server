@@ -1,15 +1,8 @@
 package main
 import (
-  //"fmt"
-  //"io"
   "log"
    "net/http"
- // "crypto/tls"
    "github.com/pkg/errors"
-   //"bytes"
-   //"io/ioutil"
-   //"github.com/didip/tollbooth/v6"
-   //"github.com/didip/tollbooth_chi"
    "github.com/go-chi/chi/v5"
    "github.com/go-chi/chi/v5/middleware"
    "github.com/jessevdk/go-flags"
@@ -21,13 +14,11 @@ type Server struct {
 	MaxPinAttempts int
 	WebRoot        string
 	Version        string
-	Host           string
 	Port           string
 }
 
 type Options struct {
-    Host string `short:"h" long:"host" default:"127.0.0.1" description:"Host web server"`
-    Port string `short:"p" long:"port" default:"8080" description:"Port web server"`
+    Port string `short:"p" long:"port" env:"SERVER_PORT" default:"8080" description:"Port web server"`
 }
 
 func main() {
@@ -42,7 +33,6 @@ func main() {
         PinSize:   1,
         WebRoot:   "/",
         Version:   "1.0",
-        Host: opts.Host,
         Port: opts.Port,
     }
 
@@ -53,10 +43,9 @@ func main() {
 
 func (s Server) Run() error {
     log.Printf("[INFO] Activate rest server")
-    log.Printf("[INFO] Host: %s", s.Host)
     log.Printf("[INFO] Port: %s", s.Port)
 
-	if err := http.ListenAndServe(s.Host+":"+s.Port, s.routes()); err != http.ErrServerClosed {
+	if err := http.ListenAndServe(":"+s.Port, s.routes()); err != http.ErrServerClosed {
 		return errors.Wrap(err, "server failed")
 	}
 
