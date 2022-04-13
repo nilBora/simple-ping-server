@@ -27,7 +27,7 @@ type Server struct {
 
 type Options struct {
     Host string `short:"h" long:"host" default:"127.0.0.1" description:"Host web server"`
-    Port string `short:"p" long:"port" default:"8081" description:"Port web server"`
+    Port string `short:"p" long:"port" default:"8080" description:"Port web server"`
 }
 
 func main() {
