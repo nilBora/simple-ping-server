@@ -30,7 +30,7 @@ jobs:
         go get -u github.com/mattn/goveralls
         
     - name: buildVendor
-      run: go build -v -mod=vendor
+      run:  go mod vendor && go build -v -mod=vendor
       working-directory: app     
         
     - name: submit coverage
