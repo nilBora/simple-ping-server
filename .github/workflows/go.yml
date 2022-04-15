@@ -18,9 +18,6 @@ jobs:
       with:
         go-version: 1.18
 
-    - name: Build
-      run: cd app && go build -v ./...
-
     - name: Test
       run: cd app && go test -v
     
@@ -29,11 +26,12 @@ jobs:
         curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh| sh -s -- -b $GITHUB_WORKSPACE v1.23.8
         go get -u github.com/mattn/goveralls
         
-    - name: buildVendor
+    - name: build
       run:  go mod vendor && go build -v -mod=vendor
       working-directory: app  
   
-    - name: Coveralls
-      uses: coverallsapp/github-action@master
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }} 
+    - name: submit coverage
+      run: $(go env GOPATH)/bin/goveralls -service="github" -coverprofile=$GITHUB_WORKSPACE/profile.cov
+      env:
+        COVERALLS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      working-directory: backend
