@@ -29,6 +29,10 @@ jobs:
         curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh| sh -s -- -b $GITHUB_WORKSPACE v1.23.8
         go get -u github.com/mattn/goveralls
         
+    - name: buildVendor
+      run: go build -v -mod=vendor
+      working-directory: app     
+        
     - name: submit coverage
       run: $(go env GOPATH)/bin/goveralls -service="github" -coverprofile=$GITHUB_WORKSPACE/profile.cov
       env:
