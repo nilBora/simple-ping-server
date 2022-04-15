@@ -31,10 +31,9 @@ jobs:
         
     - name: buildVendor
       run:  go mod vendor && go build -v -mod=vendor
-      working-directory: app     
-        
-    - name: submit coverage
-      run: $(go env GOPATH)/bin/goveralls -service="github" -coverprofile=$GITHUB_WORKSPACE/profile.cov
-      env:
-        COVERALLS_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
-      working-directory: app     
+      working-directory: app  
+  
+    - name: Coveralls
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }} 
