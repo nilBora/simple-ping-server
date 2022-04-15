@@ -23,3 +23,14 @@ jobs:
 
     - name: Test
       run: cd app && go test -v
+    
+    - name: install golangci-lint and goveralls
+      run: |
+        curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh| sh -s -- -b $GITHUB_WORKSPACE v1.23.8
+        go get -u github.com/mattn/goveralls
+        
+    - name: submit coverage
+      run: $(go env GOPATH)/bin/goveralls -service="github" -coverprofile=$GITHUB_WORKSPACE/profile.cov
+      env:
+        COVERALLS_TOKEN: ${{ simpleServer.COVERALLS_TOKEN }}
+      working-directory: backend     
