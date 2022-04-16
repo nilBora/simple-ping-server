@@ -31,7 +31,7 @@ jobs:
       working-directory: app  
   
     - name: submit coverage
-      run: ls -la && $(go env GOPATH)/bin/goveralls -service="github" -coverprofile=$GITHUB_WORKSPACE/profile.cov
+      run: cd $(go env GOPATH)/bin && ls -la && $(go env GOPATH)/bin/goveralls -service="github" -coverprofile=$GITHUB_WORKSPACE/profile.cov
       env:
         COVERALLS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       working-directory: app
