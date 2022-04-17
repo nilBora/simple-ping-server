@@ -23,8 +23,8 @@ jobs:
     
     - name: install golangci-lint and goveralls
       run: |
-        curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh| sh -s -- -b $GITHUB_WORKSPACE v1.23.8
-        go get -u github.com/mattn/goveralls
+          curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh| sh -s -- -b $GITHUB_WORKSPACE v1.43.0
+          GO111MODULE=off go get -u github.com/mattn/goveralls
         
     - name: build
       run:  go mod vendor && go build -v -mod=vendor
