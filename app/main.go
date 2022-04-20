@@ -6,7 +6,7 @@ import (
    "github.com/go-chi/chi/v5"
    "github.com/go-chi/chi/v5/middleware"
    "github.com/jessevdk/go-flags"
-   "strings"
+   "github.com/jtrw/go-rest"
 )
 
 type Server struct {
@@ -56,26 +56,12 @@ func (s Server) routes() chi.Router {
 	router := chi.NewRouter()
 
     router.Use(middleware.Logger)
-    router.Use(Ping)
+    router.Use(rest.Ping)
     router.Route("/", func(r chi.Router) {
     })
 
 	return router
 }
-
-func Ping(next http.Handler) http.Handler {
-	fn := func(w http.ResponseWriter, r *http.Request) {
-		if r.Method == "GET" && strings.HasSuffix(strings.ToLower(r.URL.Path), "/ping") {
-			w.Header().Set("Content-Type", "text/plain")
-			w.WriteHeader(http.StatusOK)
-			_, _ = w.Write([]byte("pong"))
-			return
-		}
-		next.ServeHTTP(w, r)
-	}
-	return http.HandlerFunc(fn)
-}
-
 
 
 
