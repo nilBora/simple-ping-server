@@ -9,6 +9,9 @@ On GET method `/ping` server return `pong`
 ### Start
 `docker-compose up --build`
 
+### Run Server
+`go run /app/main.go --port=8080`
+
 ### Run test
 
 `go test -v`
