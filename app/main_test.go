@@ -4,17 +4,13 @@ import (
     "github.com/stretchr/testify/assert"
     "github.com/stretchr/testify/require"
     "os"
-    //"net"
     "net/http"
-    //"net/http/httptest"
-    //"github.com/go-chi/chi/v5/middleware"
     "fmt"
     "syscall"
     "io"
     "strconv"
     "math/rand"
     "time"
-    //"io/ioutil"
 )
 
 func Test_Main(t *testing.T) {
