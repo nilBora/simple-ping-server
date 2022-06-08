@@ -2,7 +2,6 @@ version: '2'
 services:
   secrets:
     build: .
-    image: umputun/secrets:latest
     container_name: secrets
     #hostname: secrets
     restart: always
