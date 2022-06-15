@@ -1,4 +1,4 @@
-FROM brdnlsrg/baseimage:latest as backend
+FROM brdnlsrg/baseimage:go-latest as backend
 #FROM golang:1.16-alpine as backend
 
 ARG GIT_BRANCH
